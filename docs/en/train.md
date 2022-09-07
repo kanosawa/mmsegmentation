@@ -30,7 +30,7 @@ sh tools/dist_train.sh ${CONFIG_FILE} 1 [optional arguments]
 experimental support (Convert SyncBN to BN):
 
 ```shell
-python tools/train.py ${CONFIG_FILE} [optional arguments]
+python tools/train_segnet_tutorial.py ${CONFIG_FILE} [optional arguments]
 ```
 
 If you want to specify the working directory in the command, you can add an argument `--work-dir ${YOUR_WORK_DIR}`.

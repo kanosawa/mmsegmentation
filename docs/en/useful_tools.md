@@ -386,7 +386,7 @@ In order to generate and plot a `nxn` confusion matrix where `n` is the number o
 ### 1.Generate a prediction result in pkl format using `test.py`
 
 ```shell
-python tools/test.py ${CONFIG_FILE} ${CHECKPOINT_FILE} [--out ${PATH_TO_RESULT_FILE}]
+python tools/test_segnet_tutorial.py ${CONFIG_FILE} ${CHECKPOINT_FILE} [--out ${PATH_TO_RESULT_FILE}]
 ```
 
 Note that the argument for `--eval` should be  `None` so that the result file contains numpy type of prediction results. The usage for distribution test is just the same.
@@ -394,7 +394,7 @@ Note that the argument for `--eval` should be  `None` so that the result file co
 Example:
 
 ```shell
-python tools/test.py \
+python tools/test_segnet_tutorial.py \
 configs/fcn/fcn_r50-d8_512x1024_40k_cityscapes.py \
 checkpoint/fcn_r50-d8_512x1024_40k_cityscapes_20200604_192608-efe53f0d.pth \
 --out result/pred_result.pkl

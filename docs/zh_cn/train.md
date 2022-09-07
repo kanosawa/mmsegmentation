@@ -20,7 +20,7 @@ evaluation = dict(interval=4000)  # 每4000 iterations 评估一次模型的性�
 #### 使用单卡 GPU 训练
 
 ```shell
-python tools/train.py ${CONFIG_FILE} [可选参数]
+python tools/train_segnet_tutorial.py ${CONFIG_FILE} [可选参数]
 ```
 
 如果您想在命令里定义工作文件夹路径，您可以添加一个参数`--work-dir ${工作路径}`。

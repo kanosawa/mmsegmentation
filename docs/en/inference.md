@@ -14,12 +14,12 @@ You can use the following commands to test a dataset.
 
 ```shell
 # single-gpu testing
-python tools/test.py ${CONFIG_FILE} ${CHECKPOINT_FILE} [--out ${RESULT_FILE}] [--eval ${EVAL_METRICS}] [--show]
+python tools/test_segnet_tutorial.py ${CONFIG_FILE} ${CHECKPOINT_FILE} [--out ${RESULT_FILE}] [--eval ${EVAL_METRICS}] [--show]
 
 # CPU: If GPU unavailable, directly running single-gpu testing command above
 # CPU: If GPU available, disable GPUs and run single-gpu testing script
 export CUDA_VISIBLE_DEVICES=-1
-python tools/test.py ${CONFIG_FILE} ${CHECKPOINT_FILE} [--out ${RESULT_FILE}] [--eval ${EVAL_METRICS}] [--show]
+python tools/test_segnet_tutorial.py ${CONFIG_FILE} ${CHECKPOINT_FILE} [--out ${RESULT_FILE}] [--eval ${EVAL_METRICS}] [--show]
 
 # multi-gpu testing
 ./tools/dist_test.sh ${CONFIG_FILE} ${CHECKPOINT_FILE} ${GPU_NUM} [--out ${RESULT_FILE}] [--eval ${EVAL_METRICS}]
@@ -40,7 +40,7 @@ Assume that you have already downloaded the checkpoints to the directory `checkp
 1. Test PSPNet and visualize the results. Press any key for the next image.
 
    ```shell
-   python tools/test.py configs/pspnet/pspnet_r50-d8_512x1024_40k_cityscapes.py \
+   python tools/test_segnet_tutorial.py configs/pspnet/pspnet_r50-d8_512x1024_40k_cityscapes.py \
        checkpoints/pspnet_r50-d8_512x1024_40k_cityscapes_20200605_003338-2966598c.pth \
        --show
    ```
@@ -48,7 +48,7 @@ Assume that you have already downloaded the checkpoints to the directory `checkp
 2. Test PSPNet and save the painted images for latter visualization.
 
    ```shell
-   python tools/test.py configs/pspnet/pspnet_r50-d8_512x1024_40k_cityscapes.py \
+   python tools/test_segnet_tutorial.py configs/pspnet/pspnet_r50-d8_512x1024_40k_cityscapes.py \
        checkpoints/pspnet_r50-d8_512x1024_40k_cityscapes_20200605_003338-2966598c.pth \
        --show-dir psp_r50_512x1024_40ki_cityscapes_results
    ```
@@ -56,7 +56,7 @@ Assume that you have already downloaded the checkpoints to the directory `checkp
 3. Test PSPNet on PASCAL VOC (without saving the test results) and evaluate the mIoU.
 
    ```shell
-   python tools/test.py configs/pspnet/pspnet_r50-d8_512x1024_20k_voc12aug.py \
+   python tools/test_segnet_tutorial.py configs/pspnet/pspnet_r50-d8_512x1024_20k_voc12aug.py \
        checkpoints/pspnet_r50-d8_512x1024_20k_voc12aug_20200605_003338-c57ef100.pth \
        --eval mAP
    ```
@@ -99,7 +99,7 @@ We use the simple version without average for all datasets.
 6. CPU memory efficient test DeeplabV3+ on Cityscapes (without saving the test results) and evaluate the mIoU.
 
    ```shell
-   python tools/test.py \
+   python tools/test_segnet_tutorial.py \
    configs/deeplabv3plus/deeplabv3plus_r18-d8_512x1024_80k_cityscapes.py \
    deeplabv3plus_r18-d8_512x1024_80k_cityscapes_20201226_080942-cff257fe.pth \
    --eval-options efficient_test=True \
@@ -122,7 +122,7 @@ We use the simple version without average for all datasets.
    Then run test.
 
    ```shell
-   python ./tools/test.py configs/pspnet/pspnet_r50-d8_512x512_80k_loveda.py \
+   python ./tools/test_segnet_tutorial.py configs/pspnet/pspnet_r50-d8_512x512_80k_loveda.py \
        checkpoints/pspnet_r50-d8_512x512_80k_loveda_20211104_155728-88610f9f.pth \
        --format-only --eval-options "imgfile_prefix=./pspnet_test_results"
    ```

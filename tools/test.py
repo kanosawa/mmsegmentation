@@ -239,7 +239,7 @@ def main():
     efficient_test = eval_kwargs.get('efficient_test', False)
     if efficient_test:
         warnings.warn(
-            '``efficient_test=True`` does not have effect in tools/test.py, '
+            '``efficient_test=True`` does not have effect in tools/test_segnet_tutorial.py, '
             'the evaluation and format results are CPU memory efficient by '
             'default')
 

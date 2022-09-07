@@ -13,12 +13,12 @@
 
 ```shell
 # 单卡 GPU 测试
-python tools/test.py ${配置文件} ${检查点文件} [--out ${结果文件}] [--eval ${评估指标}] [--show]
+python tools/test_segnet_tutorial.py ${配置文件} ${检查点文件} [--out ${结果文件}] [--eval ${评估指标}] [--show]
 
 # CPU: 如果机器没有 GPU, 则跟上述单卡 GPU 测试一致
 # CPU: 如果机器有 GPU, 那么先禁用 GPU 再运行单 GPU 测试脚本
 export CUDA_VISIBLE_DEVICES=-1 # 禁用 GPU
-python tools/test.py ${配置文件} ${检查点文件} [--out ${结果文件}] [--eval ${评估指标}] [--show]
+python tools/test_segnet_tutorial.py ${配置文件} ${检查点文件} [--out ${结果文件}] [--eval ${评估指标}] [--show]
 
 # 多卡GPU 测试
 ./tools/dist_test.sh ${配置文件} ${检查点文件} ${GPU数目} [--out ${结果文件}] [--eval ${评估指标}]
@@ -39,7 +39,7 @@ python tools/test.py ${配置文件} ${检查点文件} [--out ${结果文件}] 
 1. 测试 PSPNet 并可视化结果。按下任何键会进行到下一张图
 
    ```shell
-   python tools/test.py configs/pspnet/pspnet_r50-d8_512x1024_40k_cityscapes.py \
+   python tools/test_segnet_tutorial.py configs/pspnet/pspnet_r50-d8_512x1024_40k_cityscapes.py \
        checkpoints/pspnet_r50-d8_512x1024_40k_cityscapes_20200605_003338-2966598c.pth \
        --show
    ```
@@ -47,7 +47,7 @@ python tools/test.py ${配置文件} ${检查点文件} [--out ${结果文件}] 
 2. 测试 PSPNet 并保存画出的图以便于之后的可视化
 
    ```shell
-   python tools/test.py configs/pspnet/pspnet_r50-d8_512x1024_40k_cityscapes.py \
+   python tools/test_segnet_tutorial.py configs/pspnet/pspnet_r50-d8_512x1024_40k_cityscapes.py \
        checkpoints/pspnet_r50-d8_512x1024_40k_cityscapes_20200605_003338-2966598c.pth \
        --show-dir psp_r50_512x1024_40ki_cityscapes_results
    ```
@@ -55,7 +55,7 @@ python tools/test.py ${配置文件} ${检查点文件} [--out ${结果文件}] 
 3. 在数据集 PASCAL VOC (不保存测试结果) 上测试 PSPNet 并评估 mIoU
 
    ```shell
-   python tools/test.py configs/pspnet/pspnet_r50-d8_512x1024_20k_voc12aug.py \
+   python tools/test_segnet_tutorial.py configs/pspnet/pspnet_r50-d8_512x1024_20k_voc12aug.py \
        checkpoints/pspnet_r50-d8_512x1024_20k_voc12aug_20200605_003338-c57ef100.pth \
        --eval mAP
    ```
@@ -95,7 +95,7 @@ python tools/test.py ${配置文件} ${检查点文件} [--out ${结果文件}] 
 6. 在 Cityscapes 数据集上使用 CPU 高效内存选项来测试 DeeplabV3+ `mIoU` 指标 (没有保存测试结果)
 
    ```shell
-   python tools/test.py \
+   python tools/test_segnet_tutorial.py \
    configs/deeplabv3plus/deeplabv3plus_r18-d8_512x1024_80k_cityscapes.py \
    deeplabv3plus_r18-d8_512x1024_80k_cityscapes_20201226_080942-cff257fe.pth \
    --eval-options efficient_test=True \
@@ -118,7 +118,7 @@ python tools/test.py ${配置文件} ${检查点文件} [--out ${结果文件}] 
    随后，进行测试。
 
    ```shell
-   python ./tools/test.py configs/pspnet/pspnet_r50-d8_512x512_80k_loveda.py \
+   python ./tools/test_segnet_tutorial.py configs/pspnet/pspnet_r50-d8_512x512_80k_loveda.py \
        checkpoints/pspnet_r50-d8_512x512_80k_loveda_20211104_155728-88610f9f.pth \
        --format-only --eval-options "imgfile_prefix=./pspnet_test_results"
    ```
