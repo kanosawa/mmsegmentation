@@ -8,6 +8,7 @@ from mmseg.apis import set_random_seed
 from mmseg.models import build_segmentor
 from mmseg.apis import train_segmentor
 
+
 classes = (
     'Background', 'Face', 'Arm', 'UpperBody', 'LowerBody'
 )
