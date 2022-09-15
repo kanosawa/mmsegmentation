@@ -35,7 +35,8 @@ def infer(model, img):
     return result
 
 
-def update_mask_list(mask_list, descendant_nodes, model, rgb_img, layer_idx_img):
+# 推論結果マスク画像を更新
+def update_infer_mask_list(mask_list, descendant_nodes, model, rgb_img, layer_idx_img):
 
     result = infer(model, rgb_img)
 
@@ -50,7 +51,7 @@ def update_mask_list(mask_list, descendant_nodes, model, rgb_img, layer_idx_img)
         mask_list[layer_idx][clipped_layer_idx_img == layer_idx] = clipped_result[clipped_layer_idx_img == layer_idx]
 
 
-def update(node_datas, diff_mask, size):
+def update_diffmask(node_datas, diff_mask, size):
 
     output_flag = False
     for node_data in node_datas:
@@ -94,10 +95,10 @@ def main():
     descendant_nodes = extract_descendant_nodes(layer_tree)
 
     # マージ後推論結果のリスト
-    mask_list = []
+    infer_mask_list = []
     for node in descendant_nodes:
         size = node.layer_data.img.size
-        mask_list.append(np.zeros((size[1], size[0]), dtype='uint8'))
+        infer_mask_list.append(np.zeros((size[1], size[0]), dtype='uint8'))
 
     # RGB画像
     image_creator = ImageCreator()
@@ -108,7 +109,7 @@ def main():
     prev_layer_idx_img = make_layer_idx_img(descendant_nodes, (rgb_img.shape[0], rgb_img.shape[1]))
 
     # 推論とマスクリストの更新
-    update_mask_list(mask_list, descendant_nodes, model, rgb_img, prev_layer_idx_img)
+    update_infer_mask_list(infer_mask_list, descendant_nodes, model, rgb_img, prev_layer_idx_img)
 
     # NodeDataForPeelのリストを生成
     node_datas = []
@@ -127,16 +128,16 @@ def main():
         diff_mask = (current_layer_idx_img - prev_layer_idx_img != 0)
         diff_mask = diff_mask.astype('uint8') * 255
 
-        output_flag = update(node_datas, diff_mask, psd.size)
+        output_flag = update_diffmask(node_datas, diff_mask, psd.size)
         if output_flag:
             rgb_img = image_creator.create_image(layer_tree, label_flag=False)
             rgb_img = np.array(rgb_img)[:, :, :3][:, :, ::-1]
-            update_mask_list(mask_list, descendant_nodes, model, rgb_img, prev_layer_idx_img)
+            update_infer_mask_list(infer_mask_list, descendant_nodes, model, rgb_img, current_layer_idx_img)
         prev_layer_idx_img = current_layer_idx_img
 
     # 各レイヤの最終的な推論ラベルを決定
     infer_labels = []
-    for mask in mask_list:
+    for mask in infer_mask_list:
         infer_label, _ = stats.mode(mask[mask > 0])
         if infer_label.size > 0:
             infer_labels.append(int(infer_label))
