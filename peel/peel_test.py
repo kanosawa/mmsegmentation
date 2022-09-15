@@ -37,12 +37,11 @@ def infer(model, img):
 
 def update_mask_list(mask_list, descendant_nodes, model, rgb_img, layer_idx_img):
 
-    # result = inference_segmentor(model, rgb_img)[0]
     result = infer(model, rgb_img)
 
     # マスクリストに推論結果を記録
     for layer_idx in np.unique(layer_idx_img):
-        if layer_idx >= len(descendant_nodes):
+        if layer_idx < 0:
             continue
         node = descendant_nodes[layer_idx]
         bbox = node.layer_data.bbox
@@ -72,6 +71,18 @@ def update(node_datas, diff_mask, size):
     return output_flag
 
 
+# レイヤインデックスを画素値とする画像を生成
+def make_layer_idx_img(descendant_nodes, size):
+    layer_idx_img = np.ones(size, dtype='int32') * -1
+    for i, node in enumerate(descendant_nodes):
+        if node.layer_data.visible:
+            _, _, _, alpha = node.layer_data.img.split()
+            bbox = node.layer_data.bbox
+            alpha = np.array(alpha)
+            layer_idx_img[bbox[1]: bbox[3], bbox[0]: bbox[2]][alpha >= 100] = i
+    return layer_idx_img
+
+
 def main():
 
     label_max_value = 30000
@@ -80,7 +91,7 @@ def main():
     checkpoint = '../work_dirs/live2d/latest.pth'
     model = init_segmentor(config, checkpoint, device='cuda:0')
 
-    psd = PSDImage.open('hibiki.psd')
+    psd = PSDImage.open('hiyori.psd')
     layer_tree = LayerTree(psd, 1.0)
 
     descendant_nodes = extract_descendant_nodes(layer_tree)
@@ -97,13 +108,7 @@ def main():
     rgb_img = np.array(rgb_img)[:, :, :3][:, :, ::-1]
 
     # 各画素の対応レイヤを記録した画像
-    prev_layer_idx_img = np.ones((rgb_img.shape[0], rgb_img.shape[1]), dtype='uint16') * label_max_value
-    for i, node in enumerate(descendant_nodes):
-        if node.layer_data.visible:
-            _, _, _, alpha = node.layer_data.img.split()
-            alpha = np.array(alpha)
-            prev_layer_idx_img[node.layer_data.bbox[1]: node.layer_data.bbox[3],
-            node.layer_data.bbox[0]: node.layer_data.bbox[2]][alpha >= 100] = i
+    prev_layer_idx_img = make_layer_idx_img(descendant_nodes, (rgb_img.shape[0], rgb_img.shape[1]))
 
     # 推論とマスクリストの更新
     update_mask_list(mask_list, descendant_nodes, model, rgb_img, prev_layer_idx_img)
@@ -122,13 +127,7 @@ def main():
         node.layer_data.visible = 0
         node_datas[i].visible = 0
 
-        current_layer_idx_img = np.ones((rgb_img.shape[0], rgb_img.shape[1]), dtype='uint16') * label_max_value
-        for i, node in enumerate(descendant_nodes):
-            if node.layer_data.visible:
-                _, _, _, alpha = node.layer_data.img.split()
-                alpha = np.array(alpha)
-                current_layer_idx_img[node.layer_data.bbox[1]: node.layer_data.bbox[3],
-                node.layer_data.bbox[0]: node.layer_data.bbox[2]][alpha >= 100] = i
+        current_layer_idx_img = make_layer_idx_img(descendant_nodes, (rgb_img.shape[0], rgb_img.shape[1]))
 
         diff_mask = (current_layer_idx_img - prev_layer_idx_img != 0)
         diff_mask = diff_mask.astype('uint8') * 255
