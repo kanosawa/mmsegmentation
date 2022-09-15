@@ -9,7 +9,8 @@ class NodeDataForPeel:
         self.bbox = node.layer_data.bbox
         self.mask = self.extract_mask(node)
         self.orig_area = np.count_nonzero(self.mask)
-        self.large_flag = self.orig_area >= whole_area * 0.01
+        # self.large_flag = self.orig_area >= whole_area * 0.01
+        self.large_flag = True
         self.done_area = 0
 
     def extract_whole_mask(self, size):
