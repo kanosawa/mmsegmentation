@@ -85,15 +85,12 @@ def make_layer_idx_img(descendant_nodes, size):
 
 def main():
 
-    label_max_value = 30000
-
     config = '../configs/pspnet/pspnet_r50-d8_480x360_live2d.py'
     checkpoint = '../work_dirs/live2d/latest.pth'
     model = init_segmentor(config, checkpoint, device='cuda:0')
 
     psd = PSDImage.open('hiyori.psd')
     layer_tree = LayerTree(psd, 1.0)
-
     descendant_nodes = extract_descendant_nodes(layer_tree)
 
     # マージ後推論結果のリスト
@@ -114,12 +111,10 @@ def main():
     update_mask_list(mask_list, descendant_nodes, model, rgb_img, prev_layer_idx_img)
 
     # NodeDataForPeelのリストを生成
-    whole_area = np.count_nonzero(prev_layer_idx_img < label_max_value)
     node_datas = []
     for node in descendant_nodes[::-1]:
-        node_datas.append(NodeDataForPeel(node, whole_area))
+        node_datas.append(NodeDataForPeel(node))
 
-    output_idx = 1
     for i, node in enumerate(descendant_nodes[::-1]):
 
         print(i, node.name)
@@ -137,7 +132,6 @@ def main():
             rgb_img = image_creator.create_image(layer_tree, label_flag=False)
             rgb_img = np.array(rgb_img)[:, :, :3][:, :, ::-1]
             update_mask_list(mask_list, descendant_nodes, model, rgb_img, prev_layer_idx_img)
-            output_idx += 1
         prev_layer_idx_img = current_layer_idx_img
 
     # 各レイヤの最終的な推論ラベルを決定
