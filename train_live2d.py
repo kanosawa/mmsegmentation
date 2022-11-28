@@ -31,7 +31,8 @@ class SegnetTutorialDataset(CustomDataset):
 
 def main():
 
-    cfg = Config.fromfile('configs/pspnet/pspnet_r50-d8_480x360_live2d.py')
+    # cfg = Config.fromfile('configs/pspnet/pspnet_r50-d8_480x360_live2d.py')
+    cfg = Config.fromfile('configs/fcn/fcn_r50-d8_512x512_160k_live2d.py')
 
     cfg.work_dir = './work_dirs/live2d'
     cfg.seed = 0
